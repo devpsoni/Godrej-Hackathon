@@ -2,7 +2,6 @@ import streamlit as st
 from streamlit_extras.switch_page_button import switch_page
 
 def landing_page():
-    # Custom CSS for the landing page
     st.markdown("""
     <style>
     #MainMenu {visibility: hidden;}
