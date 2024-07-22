@@ -218,7 +218,8 @@ else:
                 st.write(message["content"])
 
     # Chat input
-    if prompt := st.chat_input("Ask a question:"):
+    prompt = st.text_input("Ask a question:")
+    if prompt:
         st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
             st.write(prompt)
