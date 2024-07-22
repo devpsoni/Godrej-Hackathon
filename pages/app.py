@@ -1,4 +1,4 @@
-import streamlit as st
+import streamlit as strlit
 import cohere
 import sqlite3
 import hashlib
@@ -7,24 +7,24 @@ from dataclasses import dataclass
 from data_extractor import extract_text_from_pdf, extract_text_from_word_document, extract_text_from_ppt
 import google.generativeai as genai
 import os
-import streamlit as st
+import streamlit as strlit
 
 
 
 # Initialize session state
-if 'user' not in st.session_state:
-    st.session_state.user = None
-if 'messages' not in st.session_state:
-    st.session_state.messages = []
-if 'current_chat_id' not in st.session_state:
-    st.session_state.current_chat_id = None
-if 'document_uploaded' not in st.session_state:
-    st.session_state.document_uploaded = False
+if 'user' not in strlit.session_state:
+    strlit.session_state.user = None
+if 'messages' not in strlit.session_state:
+    strlit.session_state.messages = []
+if 'current_chat_id' not in strlit.session_state:
+    strlit.session_state.current_chat_id = None
+if 'document_uploaded' not in strlit.session_state:
+    strlit.session_state.document_uploaded = False
 
 @dataclass
 class CONFIG:
-    COHERE_API_KEY = st.secrets['COHERE_API_KEY']
-    GOOGLE_API_KEY = st.secrets['GOOGLE_API_KEY']
+    COHERE_API_KEY = strlit.secrets['COHERE_API_KEY']
+    GOOGLE_API_KEY = strlit.secrets['GOOGLE_API_KEY']
 
 # Initialize Gemini
 genai.configure(api_key=CONFIG.GOOGLE_API_KEY)
@@ -55,7 +55,7 @@ def cohere_output_generation(question, context):
         )
         return response.generations[0].text.strip()
     except Exception as e:
-        st.error(f"Error with Cohere API: {str(e)}")
+        strlit.error(f"Error with Cohere API: {str(e)}")
         return "I'm sorry, but I encountered an error. Please try again later."
 
 
@@ -92,10 +92,10 @@ def get_chat_messages(chat_id):
     return eval(result[0]) if result else []
 
 # Set page config
-st.set_page_config(layout="wide", page_title="Barnaby - AI Research Assistant")
+strlit.set_page_config(layout="wide", page_title="Barnaby - AI Research Assistant")
 
 # Custom CSS
-st.markdown("""
+strlit.markdown("""
 <style>
     .stButton > button {
         width: 100%;
@@ -128,56 +128,56 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Main content
-if not st.session_state.user:
-    st.title("Welcome to Barnaby")
+if not strlit.session_state.user:
+    strlit.title("Welcome to Barnaby")
     
-    tab1, tab2 = st.tabs(["Login", "Sign Up"])
+    tab1, tab2 = strlit.tabs(["Login", "Sign Up"])
     
     with tab1:
-        st.subheader("Login")
-        login_username = st.text_input("Username", key="login_username")
-        login_password = st.text_input("Password", type="password", key="login_password")
-        if st.button("Login", key="login_button"):
+        strlit.subheader("Login")
+        login_username = strlit.text_input("Username", key="login_username")
+        login_password = strlit.text_input("Password", type="password", key="login_password")
+        if strlit.button("Login", key="login_button"):
             if login(login_username, login_password):
-                st.session_state.user = login_username
-                st.experimental_rerun()
+                strlit.session_state.user = login_username
+                strlit.experimental_rerun()
             else:
-                st.error("Invalid username or password")
+                strlit.error("Invalid username or password")
     
     with tab2:
-        st.subheader("Sign Up")
-        signup_username = st.text_input("Username", key="signup_username")
-        signup_password = st.text_input("Password", type="password", key="signup_password")
-        if st.button("Sign Up", key="signup_button"):
+        strlit.subheader("Sign Up")
+        signup_username = strlit.text_input("Username", key="signup_username")
+        signup_password = strlit.text_input("Password", type="password", key="signup_password")
+        if strlit.button("Sign Up", key="signup_button"):
             if signup(signup_username, signup_password):
-                st.success("Signup successful. Please log in.")
+                strlit.success("Signup successful. Please log in.")
             else:
-                st.error("Username already exists.")
+                strlit.error("Username already exists.")
 
 else:
     # Sidebar for logged-in users
-    with st.sidebar:
-        st.title("Barnaby")
-        st.write(f"Welcome, {st.session_state.user}!")
+    with strlit.sidebar:
+        strlit.title("Barnaby")
+        strlit.write(f"Welcome, {strlit.session_state.user}!")
         
-        uploaded_file = st.file_uploader("Upload New Document", type=["pdf", "docx", "pptx"])
+        uploaded_file = strlit.file_uploader("Upload New Document", type=["pdf", "docx", "pptx"])
         
-        if st.button("New Chat", key="new_chat_button"):
-            st.session_state.messages = []
-            st.session_state.current_chat_id = None
+        if strlit.button("New Chat", key="new_chat_button"):
+            strlit.session_state.messages = []
+            strlit.session_state.current_chat_id = None
         
-        st.subheader("Your Chats")
-        chats = get_user_chats(st.session_state.user)
+        strlit.subheader("Your Chats")
+        chats = get_user_chats(strlit.session_state.user)
         for chat_id, title in chats:
-            if st.button(title, key=f"chat_{chat_id}"):
-                st.session_state.messages = get_chat_messages(chat_id)
-                st.session_state.current_chat_id = chat_id
+            if strlit.button(title, key=f"chat_{chat_id}"):
+                strlit.session_state.messages = get_chat_messages(chat_id)
+                strlit.session_state.current_chat_id = chat_id
         
-        if st.button("Logout", key="logout_button"):
-            st.session_state.user = None
-            st.session_state.messages = []
-            st.session_state.current_chat_id = None
-            st.experimental_rerun()
+        if strlit.button("Logout", key="logout_button"):
+            strlit.session_state.user = None
+            strlit.session_state.messages = []
+            strlit.session_state.current_chat_id = None
+            strlit.experimental_rerun()
 
     # Main chat interface
     if uploaded_file is not None:
@@ -191,7 +191,7 @@ else:
             elif file_type == "pptx":
                 context = extract_text_from_ppt(uploaded_file)
             
-            st.session_state.messages = [{
+            strlit.session_state.messages = [{
                 "role": "assistant",
                 "content": f"""Hey there! You've uploaded {uploaded_file.name}.
 
@@ -206,27 +206,27 @@ else:
             }]
             
             chat_title = f"Chat about {uploaded_file.name}"
-            st.session_state.current_chat_id = save_chat(st.session_state.user, chat_title, st.session_state.messages)
-            st.session_state.document_uploaded = True
+            strlit.session_state.current_chat_id = save_chat(strlit.session_state.user, chat_title, strlit.session_state.messages)
+            strlit.session_state.document_uploaded = True
         except Exception as e:
-            st.error(f"An error occurred while processing the file: {str(e)}")
+            strlit.error(f"An error occurred while processing the file: {str(e)}")
 
     # Display chat messages
-    if st.session_state.messages:
-        for message in st.session_state.messages:
-            with st.chat_message(message["role"]):
-                st.write(message["content"])
+    if strlit.session_state.messages:
+        for message in strlit.session_state.messages:
+            with strlit.chat_message(message["role"]):
+                strlit.write(message["content"])
 
     # Chat input
-    prompt = st.text_input("Ask a question:")
+    prompt = strlit.text_input("Ask a question:")
     if prompt:
-        st.session_state.messages.append({"role": "user", "content": prompt})
-        with st.chat_message("user"):
-            st.write(prompt)
+        strlit.session_state.messages.append({"role": "user", "content": prompt})
+        with strlit.chat_message("user"):
+            strlit.write(prompt)
 
-        with st.chat_message("assistant"):
-            with st.spinner("Thinking..."):
-                if st.session_state.document_uploaded and 'context' in locals():
+        with strlit.chat_message("assistant"):
+            with strlit.spinner("Thinking..."):
+                if strlit.session_state.document_uploaded and 'context' in locals():
                     # Use Cohere for document-related queries
                     response = cohere_output_generation(prompt, context)
                 else:
@@ -234,12 +234,12 @@ else:
                     try:
                         response = gemini_chat(prompt)
                     except Exception as e:
-                        st.error(f"Error with Gemini API: {str(e)}")
+                        strlit.error(f"Error with Gemini API: {str(e)}")
                         response = "I'm sorry, but I encountered an error. Please try again later."
-            st.write(response)
-            st.session_state.messages.append({"role": "assistant", "content": response})
+            strlit.write(response)
+            strlit.session_state.messages.append({"role": "assistant", "content": response})
 
         # Save updated chat
-        if st.session_state.current_chat_id:
-            c.execute("UPDATE chats SET messages=? WHERE id=?", (str(st.session_state.messages), st.session_state.current_chat_id))
+        if strlit.session_state.current_chat_id:
+            c.execute("UPDATE chats SET messages=? WHERE id=?", (str(strlit.session_state.messages), strlit.session_state.current_chat_id))
             conn.commit()
