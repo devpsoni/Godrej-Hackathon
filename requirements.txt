@@ -1,0 +1,6 @@
+streamlit==1.22.0
+cohere==4.3.1
+pdfplumber==0.9.0
+python-docx==0.8.11
+python-pptx==0.6.21
+google-generativeai==0.3.1
