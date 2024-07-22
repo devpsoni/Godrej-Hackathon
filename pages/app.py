@@ -7,12 +7,9 @@ from dataclasses import dataclass
 from data_extractor import extract_text_from_pdf, extract_text_from_word_document, extract_text_from_ppt
 import google.generativeai as genai
 import os
-from dotenv import load_dotenv
 import streamlit as st
 
 
-# Load environment variables from .env file
-load_dotenv()
 
 # Initialize session state
 if 'user' not in st.session_state:
@@ -26,8 +23,8 @@ if 'document_uploaded' not in st.session_state:
 
 @dataclass
 class CONFIG:
-    COHERE_API_KEY = os.getenv('COHERE_API_KEY')
-    GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
+    COHERE_API_KEY = st.secrets['COHERE_API_KEY']
+    GOOGLE_API_KEY = st.secrets['GOOGLE_API_KEY']
 
 # Initialize Gemini
 genai.configure(api_key=CONFIG.GOOGLE_API_KEY)
